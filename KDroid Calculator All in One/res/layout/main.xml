@@ -5,23 +5,23 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
     android:padding="5dp" >
-    
-     <TableRow
+
+    <TableRow
         android:id="@+id/tableRow0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/screen_row_background"        
+        android:background="@drawable/screen_row_background"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="5dp" >
-        
+
         <TextView
             android:id="@+id/topTextView"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#DCFFCF"            
-            android:gravity="left"                    
+            android:background="#DCFFCF"
+            android:gravity="left"
             android:textSize="15sp" />
     </TableRow>
 
@@ -32,15 +32,15 @@
         android:background="@drawable/screen_row_background"
         android:paddingBottom="10dp"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp">
-        
+        android:paddingRight="5dp" >
+
         <TextView
             android:id="@+id/leftTextView"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:background="#DCFFCF"            
-            android:gravity="left"                    
+            android:background="#DCFFCF"
+            android:gravity="left"
             android:textSize="30sp" />
 
         <TextView
@@ -48,9 +48,9 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_weight="100"
-            android:maxLength="13"
-            android:background="#DCFFCF"            
+            android:background="#DCFFCF"
             android:gravity="right"
+            android:maxLength="13"
             android:paddingRight="15sp"
             android:text="@string/default_number"
             android:textSize="30sp" />
@@ -93,22 +93,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/memory_store" />
-
-        <Button
-            android:id="@+id/memoryAddBtn"
-            style="@style/MemoryButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/memory_add" />
-
-        <Button
-            android:id="@+id/memorySubtractBtn"
-            style="@style/MemoryButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/memory_subtract" />
     </TableRow>
 
     <TableRow

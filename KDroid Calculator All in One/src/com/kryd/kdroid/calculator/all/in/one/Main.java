@@ -21,7 +21,7 @@ public class Main extends Activity {
 		ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, EQUALS, EXPONENT, COSINUS, SINUS, TANGENS, SQUARE_ROOT, ROOT, LN, LOG, POWER_OF_TWO, POWER, PERCENTAGE
 	}
 
-	private final Button[] button = new Button[36];
+	private final Button[] button = new Button[34];
 	private TextView screenTxt;
 	private Boolean actionPressed = false;
 	private Double answer = (double) 0;
@@ -58,8 +58,8 @@ public class Main extends Activity {
 		button[19] = (Button) findViewById(R.id.deleteBtn);// deleteBtn
 		button[20] = (Button) findViewById(R.id.acBtn);// acBtn
 		button[21] = (Button) findViewById(R.id.memoryStoreBtn);// memoryStoreBtn
-		button[22] = (Button) findViewById(R.id.memoryAddBtn);// memoryAddBtn
-		button[23] = (Button) findViewById(R.id.memorySubtractBtn);// memorySubtractBtn
+		button[22] = (Button) findViewById(R.id.equalsBtn);// equalsBtn
+		button[23] = (Button) findViewById(R.id.exponentBtn);// exponentBtn
 		button[24] = (Button) findViewById(R.id.multiplicationBtn);// multiplicationBtn
 		button[25] = (Button) findViewById(R.id.divisionBtn);// divisionBtn
 		button[26] = (Button) findViewById(R.id.tangensBtn);// tangensBtn
@@ -70,8 +70,6 @@ public class Main extends Activity {
 		button[31] = (Button) findViewById(R.id.lanBtn);// lanBtn
 		button[32] = (Button) findViewById(R.id.posNegBtn);// posNegBtn
 		button[33] = (Button) findViewById(R.id.dotBtn);// dotBtn
-		button[34] = (Button) findViewById(R.id.exponentBtn);// exponentBtn
-		button[35] = (Button) findViewById(R.id.equalsBtn);// equalsBtn
 
 		for (int i = 0; i < button.length; i++)
 			button[i].setOnClickListener(buttonListener);
@@ -186,7 +184,7 @@ public class Main extends Activity {
 				calculations(numberFromScreen, Action.MULTIPLICATION);
 			} else if (v.getId() == button[25].getId()) {
 				calculations(numberFromScreen, Action.DIVISION);
-			} else if (v.getId() == button[35].getId()) {
+			} else if (v.getId() == button[22].getId()) {
 				calculations(numberFromScreen, Action.EQUALS);
 			} else if (v.getId() == button[33].getId()) {
 				updateDisplay(".");
@@ -199,6 +197,14 @@ public class Main extends Activity {
 				calculations(numberFromScreen, Action.SQUARE_ROOT);
 			} else if (v.getId() == button[26].getId()) {
 				calculations(numberFromScreen, Action.TANGENS);
+			} else if (v.getId() == button[27].getId()) {
+				calculations(numberFromScreen, Action.COSINUS);
+			} else if (v.getId() == button[28].getId()) {
+				calculations(numberFromScreen, Action.SINUS);
+			} else if (v.getId() == button[31].getId()) {
+				calculations(numberFromScreen, Action.LN);
+			} else if (v.getId() == button[10].getId()) {
+				calculations(numberFromScreen, Action.LOG);
 			}
 
 		}
@@ -281,46 +287,50 @@ public class Main extends Activity {
 			break;
 
 		case POWER_OF_TWO:
-			if (prevAction == Action.EQUALS || prevAction == null) {
-				clearDisplay();
-				updateDisplay(Math.pow(number, 2));
-			} else {
-				calculations(number, prevAction);
-				clearDisplay();
-				updateDisplay(Math.pow(answer, 2));
-			}
+			clearDisplay();
+			updateDisplay(Math.pow(number, 2));
+
 			break;
 
 		case SQUARE_ROOT:
-			if (prevAction == Action.EQUALS || prevAction == null) {
-				if (number < 0) {
-					error();
-					break;
-				} else {
-					clearDisplay();
-					updateDisplay(Math.sqrt(number));
-				}
+			if (number < 0) {
+				error();
+				break;
 			} else {
-				calculations(number, prevAction);
-				if (answer < 0) {
-					error();
-					break;
-				} else {
-					clearDisplay();
-					updateDisplay(Math.sqrt(answer));
-				}
+				clearDisplay();
+				updateDisplay(Math.sqrt(number));
 			}
+
 			break;
 
 		case TANGENS:
-			if (prevAction == Action.EQUALS || prevAction == null) {
-				clearDisplay();				
-				updateDisplay(Math.tan(Math.toRadians(number)));
-			} else {
-				calculations(number, prevAction);
-				clearDisplay();
-				updateDisplay(Math.tan(Math.toRadians(answer)));
-			}
+			clearDisplay();
+			updateDisplay(Math.tan(Math.toRadians(number)));
+
+			break;
+
+		case COSINUS:
+			clearDisplay();
+			updateDisplay(Math.cos(Math.toRadians(number)));
+
+			break;
+
+		case SINUS:
+			clearDisplay();
+			updateDisplay(Math.sin(Math.toRadians(number)));
+
+			break;
+
+		case LN:
+			clearDisplay();
+			updateDisplay(Math.log(number));
+
+			break;
+
+		case LOG:
+			clearDisplay();
+			updateDisplay(Math.log10(number));
+
 			break;
 
 		case EQUALS:
