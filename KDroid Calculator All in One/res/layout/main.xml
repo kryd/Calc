@@ -5,6 +5,25 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
     android:padding="5dp" >
+    
+     <TableRow
+        android:id="@+id/tableRow0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/screen_row_background"        
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp" >
+        
+        <TextView
+            android:id="@+id/topTextView"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="#DCFFCF"            
+            android:gravity="left"                    
+            android:textSize="15sp" />
+    </TableRow>
 
     <TableRow
         android:id="@+id/tableRow1"
@@ -13,8 +32,7 @@
         android:background="@drawable/screen_row_background"
         android:paddingBottom="10dp"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="10dp" >
+        android:paddingRight="5dp">
         
         <TextView
             android:id="@+id/leftTextView"
