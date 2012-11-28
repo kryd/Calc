@@ -1,5 +1,7 @@
 package com.kryd.kdroid.calculator.all.in.one;
 
+import java.text.DecimalFormat;
+
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.app.Activity;
@@ -16,6 +18,7 @@ public class Main extends Activity {
 	private int actionCount = 0;
 	private Action prevAction = null;
 	private Vibrator vibe;
+	private DecimalFormat myFormat = new DecimalFormat("0.0000000000");
 
 	public enum Action {
 		ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, EQUALS, EXPONENT, COSINUS, SINUS, TANGENS, SQUARE_ROOT, ROOT, LN, LOG, POWER_OF_TWO, POWER, PERCENTAGE
@@ -89,19 +92,22 @@ public class Main extends Activity {
 
 		if (text.getBytes().length <= DEFAULT_LENGTH) {
 			if (strNum.getBytes().length <= DEFAULT_LENGTH) {
-				if (text == "0")
-					screenTxt.setText(strNum);
-				else
+				if (text.equals("0") && !strNum.equals(".")) {
+					if (strNum.equals("0"))
+						clearDisplay();
+					else
+						screenTxt.setText(strNum);
+				} else {
 					screenTxt.setText(text + strNum);
+				}
 			}
 		}
 	}
 
-	public void updateDisplay(Double number) {
+	public void updateDisplay(Double number) {		
 		String text = (String) screenTxt.getText();
 		Long longNumber;
 		Double prevNum = Double.parseDouble(text);
-
 		if (number == Math.floor(number)) {
 			longNumber = (long) Math.floor(number);
 			if (text.getBytes().length <= DEFAULT_LENGTH) {
@@ -151,10 +157,9 @@ public class Main extends Activity {
 				clearDisplay();
 				init();
 			}
-
 			for (int i = 0; i < 10; i++) {
 				if (v.getId() == button[i].getId()) {
-					if (actionPressed) {
+					if (actionPressed || prevAction == Action.EQUALS) {
 						clearDisplay();
 						actionPressed = false;
 					}
