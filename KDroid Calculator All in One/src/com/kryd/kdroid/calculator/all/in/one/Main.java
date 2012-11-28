@@ -18,7 +18,7 @@ public class Main extends Activity {
 	private int actionCount = 0;
 	private Action prevAction = null;
 	private Vibrator vibe;
-	private DecimalFormat myFormat = new DecimalFormat("0.0000000000");
+	private DecimalFormat myFormat = new DecimalFormat("0.11");
 
 	public enum Action {
 		ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, EQUALS, EXPONENT, COSINUS, SINUS, TANGENS, SQUARE_ROOT, ROOT, LN, LOG, POWER_OF_TWO, POWER, PERCENTAGE
