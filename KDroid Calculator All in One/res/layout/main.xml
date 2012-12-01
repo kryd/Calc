@@ -49,8 +49,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="100"
             android:background="#DCFFCF"
-            android:gravity="right"
-            android:maxLength="13"
+            android:gravity="right"            
             android:paddingRight="15sp"
             android:text="@string/default_number"
             android:textSize="30sp" />

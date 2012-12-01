@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +19,7 @@ public class Main extends Activity {
 	private int actionCount = 0;
 	private Action prevAction = null;
 	private Vibrator vibe;
-	private DecimalFormat myFormat = new DecimalFormat("0.11");
+	private DecimalFormat myFormat = new DecimalFormat("#.###########");
 
 	public enum Action {
 		ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, EQUALS, EXPONENT, COSINUS, SINUS, TANGENS, SQUARE_ROOT, ROOT, LN, LOG, POWER_OF_TWO, POWER, PERCENTAGE
@@ -104,32 +105,44 @@ public class Main extends Activity {
 		}
 	}
 
-	public void updateDisplay(Double number) {		
-		String text = (String) screenTxt.getText();
-		Long longNumber;
-		Double prevNum = Double.parseDouble(text);
-		if (number == Math.floor(number)) {
-			longNumber = (long) Math.floor(number);
-			if (text.getBytes().length <= DEFAULT_LENGTH) {
-				if (prevNum == 0)
-					screenTxt.setText(longNumber.toString());
-				else
-					screenTxt.setText(text + longNumber.toString());
+	public void updateDisplay(Double number) {
+		try {
+			String text = (String) screenTxt.getText();
+			Long longNumber;
+			Double prevNum = Double.parseDouble(text);
 
-			} else if (text.getBytes().length > DEFAULT_LENGTH) {
-				if (prevNum == 0)
-					screenTxt.setText(longNumber.toString());
-				else
-					screenTxt.setText(text + longNumber.toString());
-			}
+			if (number == Math.floor(number)) {
+				longNumber = (long) Math.floor(number);
+				if (text.getBytes().length <= DEFAULT_LENGTH) {
+					if (prevNum == 0)
+						screenTxt.setText(longNumber.toString());
+					else
+						screenTxt.setText(text + longNumber.toString());
 
-		} else {
-			if (text.getBytes().length <= DEFAULT_LENGTH) {
-				if (prevNum == 0)
-					screenTxt.setText(number.toString());
-				else
-					screenTxt.setText(text + number.toString());
+				} else if (text.getBytes().length > DEFAULT_LENGTH) {
+					if (prevNum == 0)
+						screenTxt.setText(longNumber.toString());
+					else
+						screenTxt.setText(text + longNumber.toString());
+				}
+
+			} else {
+				if (number.toString().getBytes().length <= DEFAULT_LENGTH) {
+					if (prevNum == 0)
+						screenTxt.setText(number.toString());
+					else
+						screenTxt.setText(text + number.toString());
+
+				} else if (number.toString().getBytes().length > DEFAULT_LENGTH) {
+					String num = null;
+					num = myFormat.format(number);
+					if (num.toString().equals("-0"))
+						num = "0";
+					screenTxt.setText(num);
+				}
 			}
+		} catch (Exception e) {
+			error();
 		}
 	}
 
@@ -144,6 +157,7 @@ public class Main extends Activity {
 	}
 
 	public void error() {
+		clearDisplay();
 		screenTxt.setText("Error");
 	}
 
@@ -166,8 +180,12 @@ public class Main extends Activity {
 					updateDisplay(String.valueOf(i));
 				}
 			}
-
-			numberFromScreen = Double.parseDouble((String) screenTxt.getText());
+			try {
+				numberFromScreen = Double.parseDouble((String) screenTxt
+						.getText());
+			} catch (Exception e) {
+				error();
+			}
 
 			if (v.getId() == button[20].getId()) {
 				clearDisplay();
@@ -293,8 +311,8 @@ public class Main extends Activity {
 
 		case POWER_OF_TWO:
 			clearDisplay();
-			updateDisplay(Math.pow(number, 2));
-
+			Double ans = (double) Math.pow(number, 2);
+			updateDisplay(ans);
 			break;
 
 		case SQUARE_ROOT:
@@ -303,38 +321,49 @@ public class Main extends Activity {
 				break;
 			} else {
 				clearDisplay();
-				updateDisplay(Math.sqrt(number));
+				ans = (double) Math.sqrt(number);
+				updateDisplay(ans);
 			}
 
 			break;
 
 		case TANGENS:
 			clearDisplay();
-			updateDisplay(Math.tan(Math.toRadians(number)));
+			String str = myFormat.format(Math.cos(Math.toRadians(number)));
+			if (str.equals("0") || str.equals("-0")) {
+				error();
+				break;
+			}
+			ans = (double) Math.tan(Math.toRadians(number));
+			updateDisplay(ans);
 
 			break;
 
 		case COSINUS:
 			clearDisplay();
-			updateDisplay(Math.cos(Math.toRadians(number)));
+			ans = Math.cos(Math.toRadians(number));
+			updateDisplay(ans);
 
 			break;
 
 		case SINUS:
 			clearDisplay();
-			updateDisplay(Math.sin(Math.toRadians(number)));
+			ans = Math.sin(Math.toRadians(number));
+			updateDisplay(ans);
 
 			break;
 
 		case LN:
 			clearDisplay();
-			updateDisplay(Math.log(number));
+			ans = (double) Math.log(number);
+			updateDisplay(ans);
 
 			break;
 
 		case LOG:
 			clearDisplay();
-			updateDisplay(Math.log10(number));
+			ans = (double) Math.log10(number);
+			updateDisplay(ans);
 
 			break;
 
