@@ -21,7 +21,7 @@
     <string name="memory_add">M+</string>
     <string name="memory_subtract">M-</string>
     <string name="square">&#8730;</string>
-    <string name="percent">%</string>
+    <string name="percent">x%Y</string>
     <string name="power_of_two">X<sup>2</sup></string>
     <string name="power_of_x">Y<sup>x</sup></string>
     <string name="square_var"><sup>x</sup>&#8730;Y</string>
@@ -41,5 +41,7 @@
     <string name="sinus">sin</string>
     <string name="lan">ln</string>
     <string name="logarithm">log</string>
+    <string name="PI">&#928;</string>
+    <string name="e">e</string>
 
 </resources>

@@ -5,31 +5,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
     android:padding="5dp" >
-
-    <TableRow
-        android:id="@+id/tableRow0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/screen_row_background"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="5dp" >
-
-        <TextView
-            android:id="@+id/topTextView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#DCFFCF"
-            android:gravity="left"
-            android:textSize="15sp" />
-    </TableRow>
-
+   
     <TableRow
         android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/screen_row_background"
+        android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp" >
@@ -58,17 +40,9 @@
     <TableRow
         android:id="@+id/tableRow2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="wrap_content"        
         android:padding="5dp" >
-
-        <Button
-            android:id="@+id/shiftBtn"
-            style="@style/ShiftButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/shift" />
-
+        
         <Button
             android:id="@+id/memoryClearBtn"
             style="@style/MemoryButton"
@@ -92,6 +66,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/memory_store" />
+        
+        <Button
+            android:id="@+id/piBtn"
+            style="@style/SpecialButtons"
+            android:typeface="serif"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/PI" />
+        
+        <Button
+            android:id="@+id/eBtn"
+            style="@style/SpecialButtons"
+            android:typeface="serif"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/e" />
+        
     </TableRow>
 
     <TableRow
@@ -164,7 +157,7 @@
             android:text="@string/power_of_two" />
 
         <Button
-            android:id="@+id/squareBtn"
+            android:id="@+id/sqrtBtn"
             style="@style/FunctionButton"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
@@ -172,7 +165,7 @@
             android:text="@string/square" />
 
         <Button
-            android:id="@+id/squareOfXBtn"
+            android:id="@+id/rootBtn"
             style="@style/FunctionButton"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"

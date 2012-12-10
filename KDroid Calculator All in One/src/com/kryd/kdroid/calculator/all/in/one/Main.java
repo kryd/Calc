@@ -1,6 +1,7 @@
 package com.kryd.kdroid.calculator.all.in.one;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -16,16 +17,21 @@ public class Main extends Activity {
 
 	private static final String DEFAULT_TEXT = "0";
 	private static final int DEFAULT_LENGTH = 12;
+	private static final Long MAX_NUM = Long.parseLong("9999999999999");
 	private int actionCount = 0;
 	private Action prevAction = null;
 	private Vibrator vibe;
 	private DecimalFormat myFormat = new DecimalFormat("#.###########");
+	private NumberFormat maxNumFormat = new DecimalFormat("#.########E0");
 
 	public enum Action {
-		ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, EQUALS, EXPONENT, COSINUS, SINUS, TANGENS, SQUARE_ROOT, ROOT, LN, LOG, POWER_OF_TWO, POWER, PERCENTAGE
+		ADDITION, SUBTRACTION, MULTIPLICATION, 
+		DIVISION, EQUALS, EXPONENT, COSINUS, SINUS, 
+		TANGENS, SQUARE_ROOT, ROOT, LN, LOG, POWER_OF_TWO, POWER,
+		PERCENTAGE, NATURAL_EXPONENT, PI
 	}
 
-	private final Button[] button = new Button[34];
+	private final Button[] button = new Button[35];
 	private TextView screenTxt;
 	private Boolean actionPressed = false;
 	private Double answer = (double) 0;
@@ -53,10 +59,10 @@ public class Main extends Activity {
 		button[10] = (Button) findViewById(R.id.logarithmBtn);// logarithmBtn
 		button[11] = (Button) findViewById(R.id.powerBtn);// powerBtn
 		button[12] = (Button) findViewById(R.id.xPowerTwoBtn);// xPowerTwoBtn
-		button[13] = (Button) findViewById(R.id.squareBtn);// squareBtn
-		button[14] = (Button) findViewById(R.id.squareOfXBtn);// squareOfXBtn
+		button[13] = (Button) findViewById(R.id.sqrtBtn);// squareBtn
+		button[14] = (Button) findViewById(R.id.rootBtn);// squareOfXBtn
 		button[15] = (Button) findViewById(R.id.percentBtn);// percentBtn
-		button[16] = (Button) findViewById(R.id.shiftBtn); // shift
+		button[16] = (Button) findViewById(R.id.piBtn); // PI
 		button[17] = (Button) findViewById(R.id.memoryClearBtn); // memoryClearBtn
 		button[18] = (Button) findViewById(R.id.memoryRecallBtn);// memoryRecallBtn
 		button[19] = (Button) findViewById(R.id.deleteBtn);// deleteBtn
@@ -74,6 +80,7 @@ public class Main extends Activity {
 		button[31] = (Button) findViewById(R.id.lanBtn);// lanBtn
 		button[32] = (Button) findViewById(R.id.posNegBtn);// posNegBtn
 		button[33] = (Button) findViewById(R.id.dotBtn);// dotBtn
+		button[34] = (Button) findViewById(R.id.eBtn);// Natural exponent
 
 		for (int i = 0; i < button.length; i++)
 			button[i].setOnClickListener(buttonListener);
@@ -113,21 +120,30 @@ public class Main extends Activity {
 
 			if (number == Math.floor(number)) {
 				longNumber = (long) Math.floor(number);
-				if (text.getBytes().length <= DEFAULT_LENGTH) {
-					if (prevNum == 0)
-						screenTxt.setText(longNumber.toString());
-					else
+				if (longNumber >= Long.MAX_VALUE)
+					error();
+				else if (text.getBytes().length <= DEFAULT_LENGTH) {
+					if (prevNum == 0) {
+						if (longNumber > MAX_NUM) {
+							screenTxt.setText(maxNumFormat.format(longNumber)
+									.toString());
+						} else
+							screenTxt.setText(longNumber.toString());
+					} else
 						screenTxt.setText(text + longNumber.toString());
 
 				} else if (text.getBytes().length > DEFAULT_LENGTH) {
 					if (prevNum == 0)
-						screenTxt.setText(longNumber.toString());
+						screenTxt.setText(maxNumFormat.format(longNumber)
+								.toString());
 					else
 						screenTxt.setText(text + longNumber.toString());
 				}
 
 			} else {
-				if (number.toString().getBytes().length <= DEFAULT_LENGTH) {
+				if (number >= Double.MAX_VALUE)
+					error();
+				else if (number.toString().getBytes().length <= DEFAULT_LENGTH) {
 					if (prevNum == 0)
 						screenTxt.setText(number.toString());
 					else
@@ -138,11 +154,16 @@ public class Main extends Activity {
 					num = myFormat.format(number);
 					if (num.toString().equals("-0"))
 						num = "0";
-					screenTxt.setText(num);
+					if (number > MAX_NUM) {
+						screenTxt.setText(maxNumFormat.format(number)
+								.toString());
+					} else
+						screenTxt.setText(num);
 				}
 			}
 		} catch (Exception e) {
 			error();
+			Log.d("Kryd exeption", e.getMessage());
 		}
 	}
 
@@ -228,6 +249,18 @@ public class Main extends Activity {
 				calculations(numberFromScreen, Action.LN);
 			} else if (v.getId() == button[10].getId()) {
 				calculations(numberFromScreen, Action.LOG);
+			} else if (v.getId() == button[11].getId()) {
+				calculations(numberFromScreen, Action.POWER);
+			} else if (v.getId() == button[23].getId()) {
+				calculations(numberFromScreen, Action.EXPONENT);
+			} else if (v.getId() == button[14].getId()) {
+				calculations(numberFromScreen, Action.ROOT);
+			} else if (v.getId() == button[15].getId()) {
+				calculations(numberFromScreen, Action.PERCENTAGE);
+			} else if (v.getId() == button[16].getId()) {
+				calculations(numberFromScreen, Action.PI);
+			} else if (v.getId() == button[34].getId()) {
+				calculations(numberFromScreen, Action.NATURAL_EXPONENT);
 			}
 
 		}
@@ -372,6 +405,87 @@ public class Main extends Activity {
 				calculations(number, prevAction);
 				actionCount = 0;
 			}
+			break;
+
+		case POWER:
+			if (actionCount == 0) {
+				prevAction = action;
+				answer = number;
+				actionCount++;
+			} else if (actionCount > 0 && prevAction == action) {
+				answer = Math.pow(answer, number);
+				clearDisplay();
+				updateDisplay(answer);
+			} else if (actionCount > 0 && prevAction != action) {
+				calculations(number, prevAction);
+				prevAction = action;
+			}
+
+			actionPressed = true;
+			break;
+
+		case EXPONENT:
+			if (actionCount == 0) {
+				prevAction = action;
+				answer = number;
+				actionCount++;
+			} else if (actionCount > 0 && prevAction == action) {
+				answer *= Math.pow(10d, number);
+				clearDisplay();
+				updateDisplay(answer);
+			} else if (actionCount > 0 && prevAction != action) {
+				calculations(number, prevAction);
+				prevAction = action;
+			}
+
+			actionPressed = true;
+			break;
+
+		case ROOT:
+			if (actionCount == 0) {
+				prevAction = action;
+				answer = number;
+				actionCount++;
+			} else if (actionCount > 0 && prevAction == action) {
+				answer = Math.pow(answer, 1 / number);
+				clearDisplay();
+				updateDisplay(answer);
+			} else if (actionCount > 0 && prevAction != action) {
+				calculations(number, prevAction);
+				prevAction = action;
+			}
+
+			actionPressed = true;
+			break;
+
+		case PERCENTAGE:
+			if (actionCount == 0) {
+				prevAction = action;
+				answer = number;
+				actionCount++;
+			} else if (actionCount > 0 && prevAction == action) {
+				answer = (answer / 100) * number;
+				clearDisplay();
+				updateDisplay(answer);
+			} else if (actionCount > 0 && prevAction != action) {
+				calculations(number, prevAction);
+				prevAction = action;
+			}
+			actionPressed = true;
+			break;
+
+		case PI:
+			clearDisplay();
+			ans = Math.PI;
+			updateDisplay(ans);
+			
+			break;
+
+		case NATURAL_EXPONENT:
+			clearDisplay();
+			ans = Math.E;
+			updateDisplay(ans);
+
 			break;
 
 		default:
