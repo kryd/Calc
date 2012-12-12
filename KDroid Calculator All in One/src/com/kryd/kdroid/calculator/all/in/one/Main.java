@@ -13,28 +13,29 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+//#DCFFCF
 public class Main extends Activity {
 
 	private static final String DEFAULT_TEXT = "0";
 	private static final int DEFAULT_LENGTH = 12;
-	private static final Long MAX_NUM = Long.parseLong("9999999999999");
+	private static final Long MAX_NUM = Long.parseLong("9999999999");
+	private static final Long MIN_NUM = Long.parseLong("-9999999999");
 	private int actionCount = 0;
 	private Action prevAction = null;
 	private Vibrator vibe;
-	private DecimalFormat myFormat = new DecimalFormat("#.###########");
+	private DecimalFormat myFormat = new DecimalFormat("#.##########");
 	private NumberFormat maxNumFormat = new DecimalFormat("#.########E0");
+	public static final String tag = "Kryd";
 
 	public enum Action {
-		ADDITION, SUBTRACTION, MULTIPLICATION, 
-		DIVISION, EQUALS, EXPONENT, COSINUS, SINUS, 
-		TANGENS, SQUARE_ROOT, ROOT, LN, LOG, POWER_OF_TWO, POWER,
-		PERCENTAGE, NATURAL_EXPONENT, PI
+		ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, EQUALS, EXPONENT, COSINUS, SINUS, TANGENS, SQUARE_ROOT, ROOT, LN, LOG, POWER_OF_TWO, POWER, PERCENTAGE, NATURAL_EXPONENT, PI, MEMORY_STORE, MEMORY_RECALL, MEMORY_CLEAR
 	}
 
 	private final Button[] button = new Button[35];
 	private TextView screenTxt;
 	private Boolean actionPressed = false;
 	private Double answer = (double) 0;
+	private String storedNum;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,26 @@ public class Main extends Activity {
 		}
 	}
 
+	private void memoryFunctions(Action action) {
+		switch (action) {
+		case MEMORY_STORE:
+			storedNum = (String) screenTxt.getText();
+			break;
+		case MEMORY_RECALL:
+			if (storedNum != null) {
+				clearDisplay();
+				screenTxt.setText(storedNum);
+			} else
+				clearDisplay();
+			break;
+		case MEMORY_CLEAR:
+			storedNum = null;
+			break;
+		default:
+			break;
+		}
+	}
+
 	public void updateDisplay(Double number) {
 		try {
 			String text = (String) screenTxt.getText();
@@ -122,9 +143,14 @@ public class Main extends Activity {
 				longNumber = (long) Math.floor(number);
 				if (longNumber >= Long.MAX_VALUE)
 					error();
-				else if (text.getBytes().length <= DEFAULT_LENGTH) {
+				else if (longNumber < Long.MIN_VALUE)
+					error();
+				else if (String.valueOf(longNumber).length() <= DEFAULT_LENGTH) {
 					if (prevNum == 0) {
 						if (longNumber > MAX_NUM) {
+							screenTxt.setText(maxNumFormat.format(longNumber)
+									.toString());
+						} else if (longNumber < MIN_NUM) {
 							screenTxt.setText(maxNumFormat.format(longNumber)
 									.toString());
 						} else
@@ -132,39 +158,69 @@ public class Main extends Activity {
 					} else
 						screenTxt.setText(text + longNumber.toString());
 
-				} else if (text.getBytes().length > DEFAULT_LENGTH) {
+				} else if (String.valueOf(longNumber).length() > DEFAULT_LENGTH) {
 					if (prevNum == 0)
 						screenTxt.setText(maxNumFormat.format(longNumber)
 								.toString());
 					else
-						screenTxt.setText(text + longNumber.toString());
+						screenTxt.setText(text
+								+ maxNumFormat.format(longNumber).toString());
 				}
 
 			} else {
 				if (number >= Double.MAX_VALUE)
 					error();
-				else if (number.toString().getBytes().length <= DEFAULT_LENGTH) {
+				else if (String.valueOf(number).length() <= DEFAULT_LENGTH) {
 					if (prevNum == 0)
 						screenTxt.setText(number.toString());
 					else
 						screenTxt.setText(text + number.toString());
 
-				} else if (number.toString().getBytes().length > DEFAULT_LENGTH) {
+				} else if (String.valueOf(number).length() > DEFAULT_LENGTH) {
 					String num = null;
 					num = myFormat.format(number);
 					if (num.toString().equals("-0"))
 						num = "0";
-					if (number > MAX_NUM) {
+					if (number >= MAX_NUM || number <= MIN_NUM) {
 						screenTxt.setText(maxNumFormat.format(number)
 								.toString());
-					} else
-						screenTxt.setText(num);
+
+					} else {
+						String str1 = number.toString();
+						if (str1.indexOf("E") > 0) {
+							screenTxt.setText(maxNumFormat.format(number)
+									.toString());
+						} else {
+							num = strLengthFix(number);
+							screenTxt.setText(num);
+						}
+					}
+
 				}
 			}
 		} catch (Exception e) {
 			error();
 			Log.d("Kryd exeption", e.getMessage());
 		}
+	}
+
+	private String strLengthFix(Double number) {
+		String str = number.toString();
+		String strBeforeDec, strAfterDec;
+
+		int dotIndex = str.indexOf(".");
+		strBeforeDec = str.substring(0, dotIndex);
+		strAfterDec = str.substring(dotIndex + 1);
+		Long firstNum = Long.parseLong(strAfterDec);
+		firstNum= (long) Math.round(firstNum/10);
+
+		/*
+		 * while (String.valueOf(number).length() > DEFAULT_LENGTH) {
+		 * 
+		 * }
+		 */
+
+		return "0";
 	}
 
 	public void clearDisplay() {
@@ -261,6 +317,12 @@ public class Main extends Activity {
 				calculations(numberFromScreen, Action.PI);
 			} else if (v.getId() == button[34].getId()) {
 				calculations(numberFromScreen, Action.NATURAL_EXPONENT);
+			} else if (v.getId() == button[21].getId()) {
+				memoryFunctions(Action.MEMORY_STORE);
+			} else if (v.getId() == button[17].getId()) {
+				memoryFunctions(Action.MEMORY_CLEAR);
+			} else if (v.getId() == button[18].getId()) {
+				memoryFunctions(Action.MEMORY_RECALL);
 			}
 
 		}
@@ -478,7 +540,7 @@ public class Main extends Activity {
 			clearDisplay();
 			ans = Math.PI;
 			updateDisplay(ans);
-			
+
 			break;
 
 		case NATURAL_EXPONENT:
