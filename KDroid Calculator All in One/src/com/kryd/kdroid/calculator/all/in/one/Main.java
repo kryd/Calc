@@ -3,9 +3,9 @@ package com.kryd.kdroid.calculator.all.in.one;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -32,7 +32,7 @@ public class Main extends Activity {
 	}
 
 	private final Button[] button = new Button[35];
-	private TextView screenTxt;
+	private TextView screenTxt, leftScreen;
 	private Boolean actionPressed = false;
 	private Double answer = (double) 0;
 	private String storedNum;
@@ -44,6 +44,7 @@ public class Main extends Activity {
 
 		vibe = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
+		leftScreen = (TextView) findViewById(R.id.leftTextView);
 		screenTxt = (TextView) findViewById(R.id.displayTextView);
 
 		button[0] = (Button) findViewById(R.id.zeroBtn);// zeroBtn
@@ -117,6 +118,10 @@ public class Main extends Activity {
 		switch (action) {
 		case MEMORY_STORE:
 			storedNum = (String) screenTxt.getText();
+			if (storedNum.equals("0"))
+				storedNum = null;
+			else
+				leftScreen.setText("M");
 			break;
 		case MEMORY_RECALL:
 			if (storedNum != null) {
@@ -127,6 +132,7 @@ public class Main extends Activity {
 			break;
 		case MEMORY_CLEAR:
 			storedNum = null;
+			leftScreen.setText("");
 			break;
 		default:
 			break;
@@ -138,13 +144,16 @@ public class Main extends Activity {
 			String text = (String) screenTxt.getText();
 			Long longNumber;
 			Double prevNum = Double.parseDouble(text);
+			int index = number.toString().indexOf("E");
 
-			if (number == Math.floor(number)) {
+			if (number == Math.floor(number) && (index <= 0)) {
 				longNumber = (long) Math.floor(number);
 				if (longNumber >= Long.MAX_VALUE)
-					error();
+					screenTxt.setText(maxNumFormat.format(longNumber)
+							.toString());
 				else if (longNumber < Long.MIN_VALUE)
-					error();
+					screenTxt.setText(maxNumFormat.format(longNumber)
+							.toString());
 				else if (String.valueOf(longNumber).length() <= DEFAULT_LENGTH) {
 					if (prevNum == 0) {
 						if (longNumber > MAX_NUM) {
@@ -205,22 +214,47 @@ public class Main extends Activity {
 	}
 
 	private String strLengthFix(Double number) {
+
 		String str = number.toString();
-		String strBeforeDec, strAfterDec;
-
-		int dotIndex = str.indexOf(".");
-		strBeforeDec = str.substring(0, dotIndex);
+		String strBeforeDec, strAfterDec, lastChar;
+		Integer dotIndex = str.indexOf("."), lastChIndex;
+		Long firstNum, intNum;
 		strAfterDec = str.substring(dotIndex + 1);
-		Long firstNum = Long.parseLong(strAfterDec);
-		firstNum= (long) Math.round(firstNum/10);
+		int sizeOfstrAfter = strAfterDec.length();
 
-		/*
-		 * while (String.valueOf(number).length() > DEFAULT_LENGTH) {
-		 * 
-		 * }
-		 */
+		while (str.length() > DEFAULT_LENGTH) {
+			dotIndex = str.indexOf(".");
+			strBeforeDec = str.substring(0, dotIndex);
+			strAfterDec = str.substring(dotIndex + 1);
+			lastChIndex = strAfterDec.length();
+			lastChar = strAfterDec.substring(lastChIndex - 1);
+			if (Integer.parseInt(lastChar) >= 5) {
+				strAfterDec = strAfterDec.substring(0, lastChIndex - 1);
+				intNum = Long.parseLong(strAfterDec);
+				intNum++;
+				strAfterDec = intNum.toString();
+			} else {
+				strAfterDec = strAfterDec.substring(0, lastChIndex - 1);
+			}
+			str = strBeforeDec + "." + strAfterDec;
 
-		return "0";
+			if (sizeOfstrAfter <= strAfterDec.length()) {
+				Double i = Double.parseDouble(str) * 10;
+				str = i.toString();
+			}
+		}
+
+		if (Double.parseDouble(str) == Math.floor(Double.parseDouble(str))) {
+			firstNum = (long) Math.floor(Double.parseDouble(str));
+			str = firstNum.toString();
+		} else {
+			sizeOfstrAfter = str.length();
+			while (str.substring(sizeOfstrAfter - 1).equals("0")) {
+				str = str.substring(0, sizeOfstrAfter - 1);
+				sizeOfstrAfter = str.length();
+			}
+		}
+		return str;
 	}
 
 	public void clearDisplay() {
@@ -437,6 +471,8 @@ public class Main extends Activity {
 		case COSINUS:
 			clearDisplay();
 			ans = Math.cos(Math.toRadians(number));
+			if (ans.toString().indexOf("E") > 0)
+				ans = (double) 0;
 			updateDisplay(ans);
 
 			break;
@@ -444,6 +480,8 @@ public class Main extends Activity {
 		case SINUS:
 			clearDisplay();
 			ans = Math.sin(Math.toRadians(number));
+			if (ans.toString().indexOf("E") > 0)
+				ans = (double) 0;
 			updateDisplay(ans);
 
 			break;
@@ -451,14 +489,19 @@ public class Main extends Activity {
 		case LN:
 			clearDisplay();
 			ans = (double) Math.log(number);
-			updateDisplay(ans);
-
+			if (ans.isInfinite())
+				error();
+			else
+				updateDisplay(ans);
 			break;
 
 		case LOG:
 			clearDisplay();
 			ans = (double) Math.log10(number);
-			updateDisplay(ans);
+			if (ans.isInfinite())
+				error();
+			else
+				updateDisplay(ans);
 
 			break;
 

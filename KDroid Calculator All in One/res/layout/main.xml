@@ -23,13 +23,14 @@
             android:layout_weight="1"
             android:background="#DCFFCF"
             android:gravity="left"
-            android:textSize="30sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/displayTextView"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"            
             android:layout_weight="100"
+            android:maxLength="13"
             android:background="#DCFFCF"
             android:gravity="right"            
             android:paddingRight="15sp"
