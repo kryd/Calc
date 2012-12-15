@@ -8,9 +8,17 @@
         android:id="@+id/calcButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="61dp"
+        android:text="Calculator" />
+
+    <Button
+        android:id="@+id/convButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="86dp"
-        android:text="Calculator" />
+        android:layout_marginTop="186dp"
+        android:text="Unit Converter" />
 
 </RelativeLayout>

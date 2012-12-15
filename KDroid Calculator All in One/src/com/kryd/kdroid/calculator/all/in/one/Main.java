@@ -10,7 +10,7 @@ import android.widget.Button;
 
 public class Main extends Activity {
 
-	public Button calcButton;
+	public Button calcButton, unitConvButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -18,7 +18,9 @@ public class Main extends Activity {
 		setContentView(R.layout.main);
 
 		calcButton = (Button) findViewById(R.id.calcButton);
+		unitConvButton = (Button) findViewById(R.id.convButton);
 		calcButton.setOnClickListener(mainMenuListener);
+		unitConvButton.setOnClickListener(mainMenuListener);
 
 	}
 
@@ -35,6 +37,8 @@ public class Main extends Activity {
 			// TODO Auto-generated method stub
 			if (v.getId() == calcButton.getId()) {
 				startActivity(new Intent(Main.this, Calculator.class));
+			} else if (v.getId() == unitConvButton.getId()) {
+				startActivity(new Intent(Main.this, UnitConverter.class));
 			}
 		}
 	};
