@@ -25,6 +25,7 @@ public final class R {
     public static final class id {
         public static final int acBtn=0x7f07001b;
         public static final int additionBtn=0x7f070026;
+        public static final int calcButton=0x7f07002e;
         public static final int cosinusBtn=0x7f07000c;
         public static final int deleteBtn=0x7f07001a;
         public static final int displayTextView=0x7f070003;
@@ -43,7 +44,7 @@ public final class R {
         public static final int memoryClearBtn=0x7f070005;
         public static final int memoryRecallBtn=0x7f070006;
         public static final int memoryStoreBtn=0x7f070007;
-        public static final int menu_settings=0x7f07002e;
+        public static final int menu_settings=0x7f07002f;
         public static final int multiplicationBtn=0x7f070020;
         public static final int nineBtn=0x7f070019;
         public static final int oneBtn=0x7f070023;
@@ -72,7 +73,8 @@ public final class R {
         public static final int zeroBtn=0x7f070029;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
+        public static final int calc=0x7f030000;
+        public static final int main=0x7f030001;
     }
     public static final class menu {
         public static final int main=0x7f060000;
