@@ -43,5 +43,9 @@
     <string name="logarithm">log</string>
     <string name="PI">&#928;</string>
     <string name="e">e</string>
+    <string name="uc_category">Category</string>
+    <string name="uc_from">From</string>
+    <string name="uc_to">To</string>
+    <string name="uc_convert">CONVERT</string>
 
 </resources>
